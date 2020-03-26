@@ -358,6 +358,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Town_Tree_Big (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8600403613258380907, guid: 8efc579e8f580441db1d37edf6653cc2,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 8600403613258380909, guid: 8efc579e8f580441db1d37edf6653cc2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -651,6 +656,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Town_Bush_Fat (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6003100340767683789, guid: ed4f9741f4441417d98363629541d8d7,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 6003100340767683791, guid: ed4f9741f4441417d98363629541d8d7,
         type: 3}
@@ -1698,6 +1708,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Town_Bush_Tall
       objectReference: {fileID: 0}
+    - target: {fileID: 3917799409822387373, guid: ecb0655fe8bb44c87ac22119088744b7,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecb0655fe8bb44c87ac22119088744b7, type: 3}
 --- !u!1001 &633068227
@@ -1766,6 +1781,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Town_Bush_Tall (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3917799409822387373, guid: ecb0655fe8bb44c87ac22119088744b7,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecb0655fe8bb44c87ac22119088744b7, type: 3}
@@ -1852,6 +1872,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Town_Tree_Big (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8600403613258380907, guid: 8efc579e8f580441db1d37edf6653cc2,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 8600403613258380909, guid: 8efc579e8f580441db1d37edf6653cc2,
         type: 3}
@@ -1996,6 +2021,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Town_Tree_Big (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8600403613258380907, guid: 8efc579e8f580441db1d37edf6653cc2,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 8600403613258380909, guid: 8efc579e8f580441db1d37edf6653cc2,
         type: 3}
@@ -43798,6 +43828,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Town_Bush_Fat
       objectReference: {fileID: 0}
+    - target: {fileID: 6003100340767683789, guid: ed4f9741f4441417d98363629541d8d7,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 6003100340767683791, guid: ed4f9741f4441417d98363629541d8d7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -44433,6 +44468,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Town_Tree_Big (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 8600403613258380907, guid: 8efc579e8f580441db1d37edf6653cc2,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 8600403613258380909, guid: 8efc579e8f580441db1d37edf6653cc2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -44921,6 +44961,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Town_Tree_Big (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8600403613258380907, guid: 8efc579e8f580441db1d37edf6653cc2,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 8600403613258380909, guid: 8efc579e8f580441db1d37edf6653cc2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -44992,7 +45037,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1794840125
 Transform:
@@ -46461,6 +46506,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Town_Tree_Big
+      objectReference: {fileID: 0}
+    - target: {fileID: 8600403613258380907, guid: 8efc579e8f580441db1d37edf6653cc2,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 8600403613258380909, guid: 8efc579e8f580441db1d37edf6653cc2,
         type: 3}
