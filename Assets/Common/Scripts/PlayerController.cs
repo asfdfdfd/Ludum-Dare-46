@@ -6,6 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
+    public GameObject actionTriggerGameObject;
+
+    public Collider2D actionTriggerCollider;
+
+    private ContactFilter2D actionTriggerContactFilter = new ContactFilter2D();
+
     public CinematicManager cinematicManager;
 
     public DialogController dialogController;
@@ -33,6 +39,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // TODO: Probably it would be good idea to check IsDialogInProgress. 
+        // Because if cinematic started we should stop any movement and interaction. 
+        // If dialog is stopped than some background NPC animations and actions may be active.
         // TODO: Refactor. Last second edits.
         if (cinematicManager.IsCinematicInProgress) {
             movementDirection = new Vector2(0.0f, 0.0f);
@@ -67,13 +76,43 @@ public class PlayerController : MonoBehaviour
             animator.SetLayerWeight(1, 1.0f);
         }     
 
+        if (movementDirection.x > 0) 
+        {
+            actionTriggerGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
+        }
+        else if (movementDirection.x < 0) 
+        {
+            actionTriggerGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, -90.0f);
+        }
+
+        if (movementDirection.y > 0) 
+        {
+            actionTriggerGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 180.0f);
+        }
+        else if (movementDirection.y < 0) 
+        {
+            actionTriggerGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0);
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var dialogLines = new List<DialogLine>();
-            dialogLines.Add(new DialogLine() { Name = "Test1", Message = "Test1" });
-            dialogLines.Add(new DialogLine() { Name = "Test2", Message = "Test2" });
+            List<Collider2D> overlappedObjects = new List<Collider2D>();
+            
+            var numberOfOverlappedObjects = actionTriggerCollider.OverlapCollider(actionTriggerContactFilter, overlappedObjects);
 
-            StartCoroutine(dialogController.Show(dialogLines));
+            for (int overlappedObjectIndex = 0; overlappedObjectIndex < numberOfOverlappedObjects; overlappedObjectIndex++)
+            {
+                var overlappedObject = overlappedObjects[overlappedObjectIndex];
+                
+                var actionTrigger = overlappedObject.GetComponent<ActionTrigger>();
+                
+                if (actionTrigger != null)
+                {
+                    actionTrigger.Trigger();
+
+                    break;
+                }
+            }
         }
     }
 

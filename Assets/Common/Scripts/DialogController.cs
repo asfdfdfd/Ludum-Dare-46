@@ -5,8 +5,6 @@ using TMPro;
 
 public class DialogController : MonoBehaviour
 {
-    public CinematicManager cinematicManager;
-
     public TMP_Text textMeshTitle;
     public TMP_Text textMeshText;
 
@@ -17,20 +15,8 @@ public class DialogController : MonoBehaviour
         Hide();
     }
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public IEnumerator Show(List<DialogLine> dialogLines)
     {
-        cinematicManager.StartCinematic();
-
         gameObject.SetActive(true);
 
         isDialogInProgress = true;
@@ -47,8 +33,16 @@ public class DialogController : MonoBehaviour
         isDialogInProgress = false;
 
         gameObject.SetActive(false);
+    }
 
-        cinematicManager.StopCinematic();
+    public IEnumerator Show(DialogLine dialogLine)
+    {
+        return Show(new List<DialogLine>() { dialogLine });
+    }
+
+    public IEnumerator Show(string name, string message)
+    {
+        return Show(new DialogLine(name, message));
     }
 
     public void Hide()

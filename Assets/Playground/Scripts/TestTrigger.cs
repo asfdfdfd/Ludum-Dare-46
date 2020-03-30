@@ -8,7 +8,7 @@ public class TestTrigger : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         var dialogLines = new List<DialogLine>();
-        dialogLines.Add(new DialogLine() { Name = "Хуй", Message = "Хуй" });
+        dialogLines.Add(new DialogLine("Хуй", "Хуй"));
     
         StartCoroutine(dialogController.Show(dialogLines));
     }    
