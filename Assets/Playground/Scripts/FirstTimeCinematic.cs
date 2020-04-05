@@ -14,7 +14,7 @@ public class FirstTimeCinematic : MonoBehaviour
 
     public RuntimeAnimatorController animatorControllerMarthaPink;
 
-    public CharacterController girlGameObject;
+    public NPCController girlGameObject;
 
     public DialogController dialogController;
 
