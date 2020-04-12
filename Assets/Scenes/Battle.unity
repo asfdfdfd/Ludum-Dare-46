@@ -840,6 +840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fa4045eb15034551a4105bc8de2a02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy: {fileID: 1421660071}
   playerHitPoints: 100
 --- !u!114 &1303262129
 MonoBehaviour:
@@ -1024,6 +1025,7 @@ GameObject:
   - component: {fileID: 1421660074}
   - component: {fileID: 1421660073}
   - component: {fileID: 1421660072}
+  - component: {fileID: 1421660071}
   m_Layer: 0
   m_Name: Martha_Blonde
   m_TagString: Untagged
@@ -1031,6 +1033,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1421660071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421660070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a60c073adb43b4fa189d686eb7416cdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
 --- !u!95 &1421660072
 Animator:
   serializedVersion: 3

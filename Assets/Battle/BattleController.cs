@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour
 {
+    public NPCController enemy;
+    
     private int enemyHitPoints = 100;
     public int playerHitPoints = 100;
 
@@ -57,6 +59,8 @@ public class BattleController : MonoBehaviour
 
     private IEnumerator EnemyTurn()
     {
+        enemy.Attack();
+        
         playerHitPoints -= 1;
         
         yield return null;

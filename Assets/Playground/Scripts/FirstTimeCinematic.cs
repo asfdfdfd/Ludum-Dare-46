@@ -35,7 +35,7 @@ public class FirstTimeCinematic : MonoBehaviour
 
         girlGameObject.SetMovementDirection(new Vector2(0.0f, 1.0f), true);
 
-        yield return girlGameObject.transform.DOMove(waypoint1.transform.position, girlGameObject.Speed).SetSpeedBased().WaitForCompletion();
+        yield return girlGameObject.transform.DOMove(waypoint1.transform.position, girlGameObject.speed).SetSpeedBased().WaitForCompletion();
         
         girlGameObject.SetMovementDirection(new Vector2(0.0f, 1.0f), false);
 
@@ -57,7 +57,7 @@ public class FirstTimeCinematic : MonoBehaviour
 
         girlGameObject.SetMovementDirection(new Vector2(0.0f, -1.0f), true);
 
-        yield return girlGameObject.transform.DOMove(waypoint2.transform.position, girlGameObject.Speed / 2.0f).SetSpeedBased().WaitForCompletion();
+        yield return girlGameObject.transform.DOMove(waypoint2.transform.position, girlGameObject.speed / 2.0f).SetSpeedBased().WaitForCompletion();
 
         girlGameObject.SetMovementDirection(new Vector2(-1.0f, 0.0f), false);
 
