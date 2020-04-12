@@ -15,8 +15,10 @@ public class NPCController : MonoBehaviour
     private int _aidVelocityX;
     private int _aidVelocityY;
 
-    private int _aidIsAttacking;
+    private int _aidAttack;
 
+    private bool _isAttackInProgress = false;
+    
     void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -24,7 +26,7 @@ public class NPCController : MonoBehaviour
         _aidVelocityX = Animator.StringToHash("VelocityX");
         _aidVelocityY = Animator.StringToHash("VelocityY");
 
-        _aidIsAttacking = Animator.StringToHash("IsAttacking");
+        _aidAttack = Animator.StringToHash("Attack");
     }
 
     // TODO: Remove isMoving.
@@ -35,27 +37,35 @@ public class NPCController : MonoBehaviour
 
         if (!isMoving)
         {
-            _animator.SetLayerWeight(LAYER_IDLE, 1.0f);
+            _animator.SetLayerWeight(LAYER_IDLE, 0.9f);
             _animator.SetLayerWeight(LAYER_WALK, 0.0f);
-            _animator.SetLayerWeight(LAYER_ATTACK, 0.0f);
         }
         else
         {
             _animator.SetLayerWeight(LAYER_IDLE, 0.0f);
-            _animator.SetLayerWeight(LAYER_WALK, 1.0f);
-            _animator.SetLayerWeight(LAYER_ATTACK, 0.0f);
+            _animator.SetLayerWeight(LAYER_WALK, 0.9f);
         }        
     }
 
-    public void Attack()
+    public IEnumerator Attack()
     {
+        _isAttackInProgress = true;
+        
+        _animator.SetLayerWeight(LAYER_ATTACK, 1.0f);
         _animator.SetFloat(_aidVelocityX, 0.0f);
         _animator.SetFloat(_aidVelocityY, -1.0f);
+        _animator.SetTrigger(_aidAttack);
+
+        while (_isAttackInProgress)
+        {
+            yield return null;
+        }
         
-        _animator.SetLayerWeight(LAYER_IDLE, 0.0f);
-        _animator.SetLayerWeight(LAYER_WALK, 0.0f);
-        _animator.SetLayerWeight(LAYER_ATTACK, 1.0f);
-        
-        _animator.SetBool(_aidIsAttacking, true);
+        _animator.SetLayerWeight(LAYER_ATTACK, 0.0f);
+    }
+
+    public void OnAttackFinished()
+    {
+        _isAttackInProgress = false;
     }
 }
