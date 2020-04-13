@@ -112,6 +112,15 @@ public class PlayerController : MonoBehaviour
 
                     break;
                 }
+
+                var mapItem = overlappedObject.GetComponent<MapItem>();
+
+                if (mapItem != null)
+                {
+                    Destroy(mapItem.gameObject);
+
+                    break;
+                }
             }
         }
     }
