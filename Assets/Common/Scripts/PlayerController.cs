@@ -121,6 +121,15 @@ public class PlayerController : MonoBehaviour
 
                     break;
                 }
+
+                var mapChest = overlappedObject.GetComponent<MapChest>();
+
+                if (mapChest != null)
+                {
+                    mapChest.Open();
+
+                    break;
+                }
             }
         }
     }
