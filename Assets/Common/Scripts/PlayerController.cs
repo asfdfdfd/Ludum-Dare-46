@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -128,6 +129,15 @@ public class PlayerController : MonoBehaviour
                 {
                     mapChest.Open();
 
+                    break;
+                }
+
+                var mapDoor = overlappedObject.GetComponent<MapDoor>();
+
+                if (mapDoor != null)
+                {
+                    SceneManager.LoadScene("Scenes/Battle");
+                    
                     break;
                 }
             }

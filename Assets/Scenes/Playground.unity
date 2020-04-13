@@ -2011,6 +2011,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecb0655fe8bb44c87ac22119088744b7, type: 3}
+--- !u!1 &675900516 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 429241215406989452, guid: 037d1b0ca234f4814aa78bbeb334cde0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8518964858352260825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &675900519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675900516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5c284bc6f327407a91c9fade57fd187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &688823764
 GameObject:
   m_ObjectHideFlags: 0
@@ -44218,6 +44236,50 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed4f9741f4441417d98363629541d8d7, type: 3}
+--- !u!1 &1295719695 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8518964859053365257, guid: 037d1b0ca234f4814aa78bbeb334cde0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8518964858352260825}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1295719698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295719695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5c284bc6f327407a91c9fade57fd187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!61 &1295719699
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295719695}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 1.0625}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 2, y: 2.125}
+    newSize: {x: 2, y: 2.125}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2.125}
+  m_EdgeRadius: 0
 --- !u!1001 &1328295967
 PrefabInstance:
   m_ObjectHideFlags: 0
