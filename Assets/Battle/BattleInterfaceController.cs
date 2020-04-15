@@ -18,7 +18,7 @@ public class BattleInterfaceController : MonoBehaviour
     
     void Update()
     {
-        textHitPoints.text = battleController.playerHitPoints.ToString();
+        //textHitPoints.text = battleController.playerHitPoints.ToString();
         buttonAttack.SetActive(battleController.isPlayerTurn);
     }
 }
