@@ -7,7 +7,7 @@ public class BattleInterfaceController : MonoBehaviour
 {
     public BattleController battleController;
     
-    public TMP_Text textHitPoints;
+    public List<TMP_Text> textHitPointsList;
     
     public GameObject buttonAttack;
 
@@ -18,7 +18,11 @@ public class BattleInterfaceController : MonoBehaviour
     
     void Update()
     {
-        //textHitPoints.text = battleController.playerHitPoints.ToString();
+        for (int i = 0; i < battleController.allies.Count; i++)
+        {
+            textHitPointsList[i].text = battleController.allies[i].health.ToString();            
+        }
+        
         buttonAttack.SetActive(battleController.isPlayerTurn);
     }
 }

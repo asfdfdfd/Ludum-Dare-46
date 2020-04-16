@@ -11,7 +11,7 @@ using Random = Unity.Mathematics.Random;
 public class BattleController : MonoBehaviour
 {
     private List<Enemy> enemies;
-    private List<Ally> allies;
+    public List<Ally> allies;
     
     public List<NPCController> enemySpawnPoints;
     public List<NPCController> allySpawnPoints;
