@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
@@ -19,8 +20,13 @@ public class BattleController : MonoBehaviour
     
     private Random _random = new Random((uint)DateTime.Now.Millisecond);
     
-    public IEnumerator StartBattle()
+    private List<GameObject> _players = new List<GameObject>();
+    private List<GameObject> _enemies = new List<GameObject>();
+    
+    public IEnumerator StartBattle(List<GameObject> enemies)
     {
+        _enemies = enemies;
+        
         cinematicManager.StartCinematic();
         
         yield return SpawnBrothers();
@@ -49,5 +55,9 @@ public class BattleController : MonoBehaviour
         
         GameObject gameObjectArthur = Instantiate(arthurPrefab);
         gameObjectArthur.transform.position = arthur.transform.position;
+        
+        _players.Add(gameObjectLamorak);
+        _players.Add(gameObjectPercy);
+        _players.Add(gameObjectArthur);
     }
 }

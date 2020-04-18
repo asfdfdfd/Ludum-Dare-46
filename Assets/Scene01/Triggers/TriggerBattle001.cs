@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TriggerBattle001 : MonoBehaviour
@@ -17,6 +18,6 @@ public class TriggerBattle001 : MonoBehaviour
 
     private IEnumerator StartBattle()
     {
-        yield return battleController.StartBattle();
+        yield return battleController.StartBattle(new List<GameObject> { gameObject });
     }
 }
