@@ -1,133 +1,53 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = Unity.Mathematics.Random;
 
 public class BattleController : MonoBehaviour
 {
-    private List<Enemy> enemies;
-    public List<Ally> allies;
+    public CinematicManager cinematicManager;
     
-    public List<NPCController> enemySpawnPoints;
-    public List<NPCController> allySpawnPoints;
-    
-    [NonSerialized]
-    public bool isPlayerTurn;
-    
-    private bool isAwaitingUserInput;
+    public GameObject arthur;
 
-    private Random random = new Random((uint)DateTime.Now.Millisecond);
+    public GameObject arthurPrefab;
     
-    private bool isBattleInProgress => IsAlliesAlive && IsEnemiesAlive;
-
-    private bool IsAlliesAlive
-    {
-        get
-        {
-            int health = 0;
-            allies.ForEach((ally) => health += ally.health);
-            return health > 0;
-        }
-    }
+    public GameObject lamorakPrefab;
     
-    private bool IsEnemiesAlive
-    {
-        get
-        {
-            int health = 0;
-            enemies.ForEach((enemy) => health += enemy.health);
-            return health > 0;
-        }
-    }    
+    public GameObject percyPrefab;
     
-    void Start()
+    private Random _random = new Random((uint)DateTime.Now.Millisecond);
+    
+    public IEnumerator StartBattle()
     {
-        enemies = new List<Enemy>();
-        enemies.Add(new Enemy());
-        enemies.Add(new Enemy());
+        cinematicManager.StartCinematic();
         
-        allies = new List<Ally>();
-        allies.Add(new Ally());
-        allies.Add(new Ally());
+        yield return SpawnBrothers();
         
-        StartCoroutine(BattleCoroutine());
-    }
-    
-    public void OnAttackPressed()
-    {
-        isAwaitingUserInput = false;
+        cinematicManager.StopCinematic();
     }
 
-    private IEnumerator BattleCoroutine()
+    private IEnumerator SpawnBrothers()
     {
-        while (isBattleInProgress)
-        {
-            yield return PlayerTurn();
-            yield return EnemyTurn();
-        }
-    }
-    
-    private IEnumerator PlayerTurn()
-    {
-        isPlayerTurn = true;
-        
-        isAwaitingUserInput = true;
-        
-        while (isAwaitingUserInput)
-        {
-            yield return null;
-        }
+        var battleSpots = FindObjectsOfType<BattleSpot>().Where(battleSpot => !battleSpot.GetComponent<BattleSpot>().IsTouching).OrderBy(x => _random.NextInt()).ToList().GetRange(0, 2);
 
-        var playerIndex = random.NextInt(allySpawnPoints.Count);
-            
-        var player = allySpawnPoints[playerIndex];
+        GameObject gameObjectLamorak = Instantiate(lamorakPrefab);
+        gameObjectLamorak.transform.position = arthur.transform.position;
+        var tweenerLamorak = gameObjectLamorak.transform.DOMove(battleSpots[0].transform.position, Constants.SpeedRun)
+            .SetSpeedBased();
+        
+        GameObject gameObjectPercy = Instantiate(percyPrefab);
+        gameObjectPercy.transform.position = arthur.transform.position;
+        var tweenerPercy = gameObjectPercy.transform.DOMove(battleSpots[1].transform.position, Constants.SpeedRun)
+            .SetSpeedBased();
 
-        var enemyIndex = random.NextInt(enemySpawnPoints.Count);
+        yield return tweenerLamorak.WaitForCompletion();
+        yield return tweenerPercy.WaitForCompletion();
         
-        var enemy = enemySpawnPoints[enemyIndex];
+        arthur.SetActive(false);
         
-        var positionOld = player.transform.position;
-
-        var enemyAttackPanel = enemy.transform.Find("AttackPanel").gameObject;
-        
-        yield return player.transform.DOMove(enemyAttackPanel.transform.position, 0.3f).WaitForCompletion();
-        
-        yield return player.Attack();
-        
-        enemies[enemyIndex].health -= 10;
-        
-        yield return player.transform.DOMove(positionOld, 0.3f).WaitForCompletion();
-        
-        isPlayerTurn = false;
-    }
-
-    private IEnumerator EnemyTurn()
-    {
-        var enemyIndex = random.NextInt(enemySpawnPoints.Count);
-        
-        var enemy = enemySpawnPoints[enemyIndex];
-
-        var playerIndex = random.NextInt(allySpawnPoints.Count);
-            
-        var player = allySpawnPoints[playerIndex];
-        
-        var positionOld = enemy.transform.position;
-        
-        var playerAttackPanel = player.transform.Find("AttackPanel").gameObject;
-        
-        yield return enemy.transform.DOMove(playerAttackPanel.transform.position, 0.3f).WaitForCompletion();
-        
-        yield return enemy.Attack();
-
-        allies[playerIndex].health -= 1;
-        
-        yield return enemy.transform.DOMove(positionOld, 0.3f).WaitForCompletion();
-        
-        yield return null;
+        GameObject gameObjectArthur = Instantiate(arthurPrefab);
+        gameObjectArthur.transform.position = arthur.transform.position;
     }
 }

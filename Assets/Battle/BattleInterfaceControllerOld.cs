@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class BattleInterfaceController : MonoBehaviour
+public class BattleInterfaceControllerOld : MonoBehaviour
 {
-    public BattleController battleController;
+    public BattleControllerOld battleController;
     
     public List<TMP_Text> textHitPointsList;
     
