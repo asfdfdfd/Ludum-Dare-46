@@ -7,19 +7,15 @@ public class CinematicIntro : MonoBehaviour
 {
     public CinematicManager cinematicManager;
     public DialogController dialogController;
-
-    public GameObject lamorak;
-    public GameObject arthur;
-    public GameObject percy;
     
-    public GameObject lamorakStart;
+    public GameObject arthur;
+    public GameObject lancelot;
+    
     public GameObject arthurStart;
-    public GameObject percyStart;
+    public GameObject lancelotStart;
     
     public GameObject arthurStop;
-
-    public GameObject lamorakStop;
-    public GameObject percyStop;
+    public GameObject lancelotStop;
 
     public bool finalizeWithoutCinematic;
     
@@ -39,18 +35,14 @@ public class CinematicIntro : MonoBehaviour
     {
         cinematicManager.StartCinematic();
         
-        lamorak.transform.position = lamorakStart.transform.position;
-        var tweenerLamorak = lamorak.transform.DOMove(lamorakStop.transform.position, Constants.SpeedWalk).SetSpeedBased();
-
         arthur.transform.position = arthurStart.transform.position;
         var tweenerArthur = arthur.transform.DOMove(arthurStop.transform.position, Constants.SpeedWalk).SetSpeedBased();
         
-        percy.transform.position = percyStart.transform.position;
-        var tweenerPercy = percy.transform.DOMove(percyStop.transform.position, Constants.SpeedWalk).SetSpeedBased();
-
-        yield return tweenerLamorak.WaitForCompletion();
+        lancelot.transform.position = lancelotStart.transform.position;
+        var tweenerLancelot = lancelot.transform.DOMove(lancelotStop.transform.position, Constants.SpeedWalk).SetSpeedBased();
+        
         yield return tweenerArthur.WaitForCompletion();
-        yield return tweenerPercy.WaitForCompletion();
+        yield return tweenerLancelot.WaitForCompletion();
         
         Finalize();
         
@@ -59,8 +51,7 @@ public class CinematicIntro : MonoBehaviour
 
     private void Finalize()
     {
-        lamorak.transform.position = lamorakStop.transform.position;
         arthur.transform.position = arthurStop.transform.position;
-        percy.transform.position = percyStop.transform.position;
+        lancelot.transform.position = lancelotStop.transform.position;
     }
 }

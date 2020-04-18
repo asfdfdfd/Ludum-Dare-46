@@ -13,51 +13,49 @@ public class BattleController : MonoBehaviour
     public GameObject arthur;
 
     public GameObject arthurPrefab;
-    
-    public GameObject lamorakPrefab;
-    
-    public GameObject percyPrefab;
+    public GameObject lancelotPrefab;
     
     private Random _random = new Random((uint)DateTime.Now.Millisecond);
     
     private List<GameObject> _players = new List<GameObject>();
     private List<GameObject> _enemies = new List<GameObject>();
+
+    private bool _isBattleInProgress = false;
+
+    public bool isBattleInProgress => _isBattleInProgress;
     
     public IEnumerator StartBattle(List<GameObject> enemies)
     {
+        _isBattleInProgress = true;
+        
         _enemies = enemies;
         
         cinematicManager.StartCinematic();
         
         yield return SpawnBrothers();
+
+        _enemies[0].GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
         
         cinematicManager.StopCinematic();
     }
 
     private IEnumerator SpawnBrothers()
     {
-        var battleSpots = FindObjectsOfType<BattleSpot>().Where(battleSpot => !battleSpot.GetComponent<BattleSpot>().IsTouching).OrderBy(x => _random.NextInt()).ToList().GetRange(0, 2);
-
-        GameObject gameObjectLamorak = Instantiate(lamorakPrefab);
-        gameObjectLamorak.transform.position = arthur.transform.position;
-        var tweenerLamorak = gameObjectLamorak.transform.DOMove(battleSpots[0].transform.position, Constants.SpeedRun)
+        var battleSpot = FindObjectsOfType<BattleSpot>().Where(x => !x.GetComponent<BattleSpot>().IsTouching).OrderBy(x => _random.NextInt()).First();
+        
+        GameObject gameObjectLancelot = Instantiate(lancelotPrefab);
+        gameObjectLancelot.transform.position = arthur.transform.position;
+        var tweenerLancelot = gameObjectLancelot.transform.DOMove(battleSpot.transform.position, Constants.SpeedRun)
             .SetSpeedBased();
         
-        GameObject gameObjectPercy = Instantiate(percyPrefab);
-        gameObjectPercy.transform.position = arthur.transform.position;
-        var tweenerPercy = gameObjectPercy.transform.DOMove(battleSpots[1].transform.position, Constants.SpeedRun)
-            .SetSpeedBased();
-
-        yield return tweenerLamorak.WaitForCompletion();
-        yield return tweenerPercy.WaitForCompletion();
+        yield return tweenerLancelot.WaitForCompletion();
         
         arthur.SetActive(false);
         
         GameObject gameObjectArthur = Instantiate(arthurPrefab);
         gameObjectArthur.transform.position = arthur.transform.position;
         
-        _players.Add(gameObjectLamorak);
-        _players.Add(gameObjectPercy);
+        _players.Add(gameObjectLancelot);
         _players.Add(gameObjectArthur);
     }
 }

@@ -10,8 +10,7 @@ public class TriggerIntroContinueToTheSword : MonoBehaviour
     public CinematicManager cinematicManager;
 
     public GameObject arthur;
-    public GameObject lamorak;
-    public GameObject percy;
+    public GameObject lancelot;
     
     public bool finalizeWithoutCinematic;
     
@@ -33,15 +32,12 @@ public class TriggerIntroContinueToTheSword : MonoBehaviour
     private IEnumerator StartCinematic()
     {
         cinematicManager.StartCinematic();
-
-        Destroy(lamorak.GetComponent<Collider2D>());
-        Destroy(percy.GetComponent<Collider2D>());
         
-        var tweenerLamorak = lamorak.transform.DOMove(arthur.transform.position, Constants.SpeedRun).SetSpeedBased();
-        var tweenerPercy = percy.transform.DOMove(arthur.transform.position, Constants.SpeedRun).SetSpeedBased();
-
-        yield return tweenerLamorak.WaitForCompletion();
-        yield return tweenerPercy.WaitForCompletion();
+        Destroy(lancelot.GetComponent<Collider2D>());
+        
+        var tweenerLancelot = lancelot.transform.DOMove(arthur.transform.position, Constants.SpeedRun).SetSpeedBased();
+        
+        yield return tweenerLancelot.WaitForCompletion();
         
         Finalize();
         
@@ -50,8 +46,7 @@ public class TriggerIntroContinueToTheSword : MonoBehaviour
 
     private void Finalize()
     {
-        Destroy(lamorak);
-        Destroy(percy);
+        Destroy(lancelot);
         Destroy(gameObject);
     }
 }
