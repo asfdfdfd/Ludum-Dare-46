@@ -18,6 +18,8 @@ public class GameState
     public readonly int ArthurDamage = 40;
     public readonly int LancelotHeal = 40;
 
+    public bool ArthurHasExcalibur;
+    
     public GameState()
     {
         Reset();
@@ -67,5 +69,10 @@ public class GameState
         {
             _lancelotHealth = LancelotMaxHealth;
         }
-    }      
+    }
+
+    public void KillLancelot()
+    {
+        _lancelotHealth = 0;
+    }
 }

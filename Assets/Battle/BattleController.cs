@@ -17,7 +17,8 @@ public class BattleController : MonoBehaviour
     public GameObject arrowPrefab;
     public GameObject arthurPrefab;
     public GameObject lancelotPrefab;
-
+    public GameObject lancelotEnemyPrefab;
+    
     public Image buttonAttack;
     public Image buttonDefend;
     public Image buttonHeal;
@@ -225,7 +226,7 @@ public class BattleController : MonoBehaviour
         _selectedButtonIndex = buttonIndex;
         _activeButtons[_selectedButtonIndex].color = Color.red;
     }
-
+    
     public void StartBattle(List<Enemy> enemies)
     {
         StartCoroutine(StartBattleCoroutine(enemies));
@@ -283,10 +284,34 @@ public class BattleController : MonoBehaviour
                 _activeEnemy = _enemies[_activeEnemyIndex];
 
                 yield return EnemyTurn();
+
+                if (GameState.Instance.ArthurHealth == 0)
+                {
+                    // TODO: GAME OVER.
+                }
             }
             else
             {
-                yield return FinishBattle();
+                if (GameState.Instance.ArthurHasExcalibur && GameState.Instance.LancelotHealth > 0)
+                {
+                    GameState.Instance.KillLancelot();
+                    
+                    _enemies.ForEach(x => Destroy(x.gameObject));
+                    _enemies.Clear();
+
+                    var lancelot = _players[1];
+                    _players.RemoveAt(1);
+                    var lancelotPosition = lancelot.transform.position;
+                    Destroy(lancelot);
+
+                    var lancelotEnemy = Instantiate(lancelotEnemyPrefab);
+                    lancelotEnemy.transform.position = lancelotPosition;
+                    _enemies.Add(lancelotEnemy.GetComponent<Enemy>());
+                }
+                else
+                {
+                    yield return FinishBattle();
+                }
             }
         }
     }
@@ -345,6 +370,12 @@ public class BattleController : MonoBehaviour
 
     private IEnumerator EnemyTurn()
     {
+        // Special case for the Lancelot battle.
+        if (_activeEnemy.damage == 0)
+        {
+            yield break;
+        }
+        
         var positionPrev = _activeEnemy.transform.position;
 
         var randomPlayer = _players[_random.NextInt(0, _players.Count)];
@@ -386,22 +417,29 @@ public class BattleController : MonoBehaviour
     private IEnumerator SpawnAllies()
     {
         var arthurPosition = arthur.transform.position;
-        var battleSpot = FindObjectsOfType<BattleSpot>().Where(x => !x.GetComponent<BattleSpot>().IsTouching).OrderBy(x => _random.NextInt()).First();
+
+        if (GameState.Instance.LancelotHealth > 0)
+        {
+            var battleSpot = FindObjectsOfType<BattleSpot>().Where(x => !x.GetComponent<BattleSpot>().IsTouching)
+                .OrderBy(x => _random.NextInt()).First();
+
+            GameObject gameObjectLancelot = Instantiate(lancelotPrefab);
+            gameObjectLancelot.transform.position = arthurPosition;
+            var tweenerLancelot = gameObjectLancelot.transform.DOMove(battleSpot.transform.position, Constants.SpeedRun)
+                .SetSpeedBased();
+
+            yield return tweenerLancelot.WaitForCompletion();
+
+            _players.Add(gameObjectLancelot);
+        }
         
-        GameObject gameObjectLancelot = Instantiate(lancelotPrefab);
-        gameObjectLancelot.transform.position = arthurPosition;
-        var tweenerLancelot = gameObjectLancelot.transform.DOMove(battleSpot.transform.position, Constants.SpeedRun)
-            .SetSpeedBased();
-        
-        yield return tweenerLancelot.WaitForCompletion();
-        
+
         arthur.SetActive(false);
         
         GameObject gameObjectArthur = Instantiate(arthurPrefab);
         gameObjectArthur.transform.position = arthurPosition;
         
-        _players.Add(gameObjectArthur);
-        _players.Add(gameObjectLancelot);
+        _players.Insert(0, gameObjectArthur);
     }
 
     private void Update()
