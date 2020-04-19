@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ally
+public class EnemyOld
 {
     public int health = 100;
 }

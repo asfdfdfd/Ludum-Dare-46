@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerBattle001 : MonoBehaviour
+public class TriggerBattleBoss : MonoBehaviour
 {
     public BattleController battleController;
     

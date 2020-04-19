@@ -10,8 +10,8 @@ using Random = Unity.Mathematics.Random;
 
 public class BattleControllerOld : MonoBehaviour
 {
-    private List<Enemy> enemies;
-    public List<Ally> allies;
+    private List<EnemyOld> enemies;
+    public List<AllyOld> allies;
     
     public List<NPCController> enemySpawnPoints;
     public List<NPCController> allySpawnPoints;
@@ -47,13 +47,13 @@ public class BattleControllerOld : MonoBehaviour
     
     void Start()
     {
-        enemies = new List<Enemy>();
-        enemies.Add(new Enemy());
-        enemies.Add(new Enemy());
+        enemies = new List<EnemyOld>();
+        enemies.Add(new EnemyOld());
+        enemies.Add(new EnemyOld());
         
-        allies = new List<Ally>();
-        allies.Add(new Ally());
-        allies.Add(new Ally());
+        allies = new List<AllyOld>();
+        allies.Add(new AllyOld());
+        allies.Add(new AllyOld());
         
         StartCoroutine(BattleCoroutine());
     }
