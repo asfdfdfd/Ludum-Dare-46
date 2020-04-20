@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameState
 {
-    private const int ArthurMaxHealth = 100;
-    private const int LancelotMaxHealth = 100;
+    public const int ArthurMaxHealth = 100;
+    public const int LancelotMaxHealth = 100;
     
     public static readonly GameState Instance = new GameState();
 
@@ -18,7 +18,7 @@ public class GameState
     public readonly int ArthurDamage = 40;
     public readonly int LancelotHeal = 40;
 
-    public bool ArthurHasExcalibur;
+    public bool ArthurHasExcalibur = false;
     
     public GameState()
     {

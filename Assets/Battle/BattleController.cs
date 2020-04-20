@@ -339,7 +339,11 @@ public class BattleController : MonoBehaviour
 
     private void Reset()
     {
+        _enemies.ForEach(x => Destroy(x.gameObject));
+        _enemies.Clear();
+        
         _players.ForEach(x => Destroy(x));
+        _players.Clear();
         
         _activePlayer = null;
         _activePlayerIndex = -1;
@@ -378,11 +382,20 @@ public class BattleController : MonoBehaviour
         
         var positionPrev = _activeEnemy.transform.position;
 
-        var randomPlayer = _players[_random.NextInt(0, _players.Count)];
+        GameObject targetPlayer;
+
+        if (GameState.Instance.ArthurHasExcalibur)
+        {
+            targetPlayer = _players.First();
+        }
+        else
+        {
+            targetPlayer = _players[_random.NextInt(0, _players.Count)];   
+        }
+
+        yield return _activeEnemy.transform.DOMove(targetPlayer.transform.position, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
         
-        yield return _activeEnemy.transform.DOMove(randomPlayer.transform.position, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
-        
-        if (randomPlayer == _players[0])
+        if (targetPlayer == _players[0])
         {
             GameState.Instance.DamageArthur(_activeEnemy.damage);
         }
