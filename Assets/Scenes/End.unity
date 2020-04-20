@@ -1355,6 +1355,8 @@ MonoBehaviour:
   textName: {fileID: 1158705084}
   textCounter: {fileID: 1005064546}
   textDescription: {fileID: 1100256673}
+  icon1: {fileID: 2136797636}
+  icon2: {fileID: 1465181209}
 --- !u!1 &2136797636
 GameObject:
   m_ObjectHideFlags: 0

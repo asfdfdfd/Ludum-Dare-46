@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = Unity.Mathematics.Random;
 
 public class EndingController : MonoBehaviour
 {
@@ -10,9 +13,28 @@ public class EndingController : MonoBehaviour
     public TMP_Text textCounter;
 
     public TMP_Text textDescription;
+
+    public GameObject icon1;
+    
+    public GameObject icon2;
+    
+    private Random _random = new Random((uint)DateTime.Now.Millisecond);
     
     void Start()
     {
+        var iconIndex = _random.NextInt(0, 2);
+
+        if (iconIndex == 0)
+        {
+            icon1.SetActive(true);
+            icon2.SetActive(false);
+        }
+        else
+        {
+            icon2.SetActive(true);
+            icon1.SetActive(false);
+        }
+        
         switch (GameState.Instance.ending)
         {
             case Ending.A:

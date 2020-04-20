@@ -64,6 +64,11 @@ public class BattleController : MonoBehaviour
     private bool _isBattleStartedWithApple = false;
     private bool _isLancelotKillingStarted = false;
     
+    private int _aidAttack = Animator.StringToHash("Attack");
+    
+    private int _aidVelocityX = Animator.StringToHash("VelocityX");
+    private int _aidVelocityY = Animator.StringToHash("VelocityY");
+    
     private void Awake()
     {
         _buttons = new List<Image> {buttonAttack, buttonDefend, buttonHeal, buttonApple};
@@ -138,8 +143,19 @@ public class BattleController : MonoBehaviour
 
         var positionPrev = _activePlayer.transform.position;
         
+        var animator = _activePlayer.GetComponent<Animator>();
+        
+        animator.SetLayerWeight(0, 0.0f);
+        animator.SetLayerWeight(1, 0.0f);
+        animator.SetLayerWeight(2, 1.0f);
+        animator.SetFloat(_aidVelocityX, 0.0f);
+        animator.SetFloat(_aidVelocityY, -1.0f);        
+        animator.SetTrigger(_aidAttack);
+        
         yield return _activePlayer.transform.DOMove(selectedEnemy.transform.position, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
-
+        
+        animator.SetTrigger(_aidAttack);
+        
         selectedEnemy.Damage(GameState.Instance.ArthurDamage);
 
         if (selectedEnemy.health == 0)
@@ -149,6 +165,9 @@ public class BattleController : MonoBehaviour
         }
         
         yield return _activePlayer.transform.DOMove(positionPrev, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
+        
+        animator.SetLayerWeight(0, 1.0f);
+        animator.SetLayerWeight(2, 0.0f);
         
         _isPlayerActing = false;
         
@@ -359,6 +378,9 @@ public class BattleController : MonoBehaviour
                     _enemies.Add(lancelotEnemy.GetComponent<Enemy>());
 
                     _isLancelotKillingStarted = true;
+
+                    yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "It demands blood!");
+                    yield return dialogController.Show(DialogLineAvatar.Lancelot, "Lancelot", "Arthur, stop!");
                 }
                 else
                 {
