@@ -9,8 +9,12 @@ public class GameState
     
     public static readonly GameState Instance = new GameState();
 
+    private bool _hasApple = false;
+    
     private int _arthurHealth;
     private int _lancelotHealth;
+
+    public bool HasApple => _hasApple;
 
     public int ArthurHealth => _arthurHealth;
     public int LancelotHealth => _lancelotHealth;
@@ -19,6 +23,8 @@ public class GameState
     public readonly int LancelotHeal = 40;
 
     public bool ArthurHasExcalibur = false;
+
+    public Ending ending = Ending.N;
     
     public GameState()
     {
@@ -27,8 +33,11 @@ public class GameState
 
     public void Reset()
     {
+        ArthurHasExcalibur = false;
+        _hasApple = false;
         _arthurHealth = ArthurMaxHealth;
         _lancelotHealth = LancelotMaxHealth;
+        ending = Ending.N;
     }
 
     public void DamageArthur(int damage)
@@ -74,5 +83,17 @@ public class GameState
     public void KillLancelot()
     {
         _lancelotHealth = 0;
+    }
+
+    public void PickUpApple()
+    {
+        _hasApple = true;
+    }
+
+    public void FullHealArthur()
+    {
+        _arthurHealth = ArthurMaxHealth;
+
+        _hasApple = false;
     }
 }

@@ -118,6 +118,11 @@ public class PlayerController : MonoBehaviour
 
                 if (mapItem != null)
                 {
+                    if (mapItem.itemId == "apple")
+                    {
+                        GameState.Instance.PickUpApple();
+                    }
+                    
                     Destroy(mapItem.gameObject);
 
                     break;

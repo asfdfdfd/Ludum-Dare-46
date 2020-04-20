@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class DialogController : MonoBehaviour
 {
@@ -10,6 +12,8 @@ public class DialogController : MonoBehaviour
     public TMP_Text textMeshTitle;
     public TMP_Text textMeshText;
 
+    public Image imageAvatar;
+    
     private bool isDialogInProgress;
 
     void Awake()
@@ -17,6 +21,23 @@ public class DialogController : MonoBehaviour
         Hide();
     }
 
+    private Sprite DialogLineAvatarToSprite(DialogLineAvatar dialogLineAvatar)
+    {
+        switch (dialogLineAvatar)
+        {
+            case DialogLineAvatar.None:
+                return null;
+            case DialogLineAvatar.Arthur:
+                return Resources.Load<Sprite>("Avatar Arthur");
+            case DialogLineAvatar.Lancelot:
+                return Resources.Load<Sprite>("Avatar Lancelot");
+            case DialogLineAvatar.Ghost:
+                return Resources.Load<Sprite>("Avatar Ghost");
+        }
+        
+        throw new Exception("Please handle new DialogLineAvatar");
+    }
+    
     public IEnumerator Show(List<DialogLine> dialogLines)
     {
         Show();
@@ -27,6 +48,18 @@ public class DialogController : MonoBehaviour
         yield return null;
         foreach (DialogLine dialogLine in dialogLines)
         {
+            var sprite = DialogLineAvatarToSprite(dialogLine.Avatar);
+            
+            if (sprite != null)
+            {
+                imageAvatar.sprite = sprite;
+                imageAvatar.gameObject.SetActive(true);
+            }
+            else
+            {
+                imageAvatar.gameObject.SetActive(false);
+            }
+
             textMeshTitle.SetText(dialogLine.Name);
             textMeshText.SetText(dialogLine.Message);
             yield return new WaitForKeyDownAndKeyUp(KeyCode.Space);
@@ -46,6 +79,11 @@ public class DialogController : MonoBehaviour
     {
         return Show(new DialogLine(name, message));
     }
+    
+    public IEnumerator Show(DialogLineAvatar dialogLineAvatar, string name, string message)
+    {
+        return Show(new DialogLine(dialogLineAvatar, name, message));
+    }    
 
     private void Show()
     {

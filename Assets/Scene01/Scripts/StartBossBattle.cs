@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class StartBossBattle : MonoBehaviour
 {
+    public DialogController dialogController;
+    
     public BattleController battleController;
     
     public GameObject arthur;
@@ -18,25 +20,53 @@ public class StartBossBattle : MonoBehaviour
     
     public void StartBattle()
     {
+        StartCoroutine(StartBattleCoroutine());
+    }
+
+    // Create smooth fade animation.
+    private IEnumerator StartBattleCoroutine()
+    {
+        if (GameState.Instance.LancelotHealth > 0)
+        {
+            yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "We found it, Lancelot. Holy sword!");
+        }
+        else
+        {
+            yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "I found it. Holy sword!");
+        }
+
         sword.SetActive(false);
-        
-        // TODO: Dialog about sword. Sword starts to damage Arthur etc.
         
         GameState.Instance.ArthurHasExcalibur = true;
         
-        // TODO: Remove skull with fade out.
-        
+        // TODO: Make silence pause here.
+
+        if (GameState.Instance.LancelotHealth > 0)
+        {
+            yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "Ah!");
+            yield return dialogController.Show(DialogLineAvatar.Lancelot, "Lancelot", "It drains your life. Drop it!");
+            yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "No...");
+        }
+        else
+        {
+            yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "Ah!");
+            yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "It drains my life.");            
+        }
+
         skull.SetActive(false);
-        
-        // TODO: Wait a bit and remove stone with fade out and 
+
+        yield return new WaitForSeconds(1.0f); 
         
         stone.SetActive(false);
+        
+        yield return new WaitForSeconds(1.0f);
         
         var gameObjectBoss = Instantiate(prefabBoss);
         gameObjectBoss.transform.position = stone.transform.position;
         
-        // TODO: Dialog with Arthur.
+        yield return dialogController.Show(DialogLineAvatar.Ghost, "Ghost", "It will not make you happy. Drop it now.");
+        yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "No. Die, monster!");
 
-        battleController.StartBattle(new List<Enemy> { gameObjectBoss.GetComponent<Enemy>() });
+        battleController.StartBattle(new List<Enemy> { gameObjectBoss.GetComponent<Enemy>() }, false);
     }
 }

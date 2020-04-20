@@ -43,6 +43,15 @@ public class CinematicIntro : MonoBehaviour
         
         yield return tweenerArthur.WaitForCompletion();
         yield return tweenerLancelot.WaitForCompletion();
+
+        yield return dialogController.Show(DialogLineAvatar.Lancelot, "Lancelot", "Arthur?");
+        yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "Do you feel it?");
+        yield return dialogController.Show(DialogLineAvatar.Lancelot, "Lancelot", "What?");
+        yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "Power of the sword. It's getting stronger.");
+        yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "Let's go.");
+
+        yield return lancelot.transform.DOMove(arthur.transform.position, Constants.SpeedWalk).SetSpeedBased()
+            .WaitForCompletion();
         
         Finalize();
         
@@ -52,6 +61,6 @@ public class CinematicIntro : MonoBehaviour
     private void Finalize()
     {
         arthur.transform.position = arthurStop.transform.position;
-        lancelot.transform.position = lancelotStop.transform.position;
+        Destroy(lancelot);
     }
 }

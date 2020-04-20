@@ -16,7 +16,7 @@ public class TriggerBattle001 : MonoBehaviour
         {
             Destroy(gameObject);
             
-            battleController.StartBattle(new List<Enemy> { enemy });
+            battleController.StartBattle(new List<Enemy> { enemy }, true);
         }
     }
 }

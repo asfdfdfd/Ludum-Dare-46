@@ -7,11 +7,19 @@ using UnityEngine.Events;
 public class ActionTrigger : MonoBehaviour
 {
     public UnityEvent triggerEvent;
+
+    public bool destroyAfterAction;
     
     public void Trigger()
     {
-        if (triggerEvent != null) {
+        if (triggerEvent != null) 
+        {
             triggerEvent.Invoke();
+        }
+
+        if (destroyAfterAction)
+        {
+            Destroy(this);    
         }
     }
 }

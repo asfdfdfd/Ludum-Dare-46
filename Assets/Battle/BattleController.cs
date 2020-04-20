@@ -5,11 +5,14 @@ using System.Linq;
 using System.Resources;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = Unity.Mathematics.Random;
 
 public class BattleController : MonoBehaviour
 {
+    public DialogController dialogController;
+    
     public CinematicManager cinematicManager;
     
     public GameObject arthur;
@@ -22,6 +25,7 @@ public class BattleController : MonoBehaviour
     public Image buttonAttack;
     public Image buttonDefend;
     public Image buttonHeal;
+    public Image buttonApple;
     
     private Random _random = new Random((uint)DateTime.Now.Millisecond);
     
@@ -55,10 +59,14 @@ public class BattleController : MonoBehaviour
     private GameObject _selectedPlayer;
 
     private bool _isSelectingPlayerEnabled = false;
+
+    private bool _isBattleStartedWithLancelot = false;
+    private bool _isBattleStartedWithApple = false;
+    private bool _isLancelotKillingStarted = false;
     
     private void Awake()
     {
-        _buttons = new List<Image> {buttonAttack, buttonDefend, buttonHeal};
+        _buttons = new List<Image> {buttonAttack, buttonDefend, buttonHeal, buttonApple};
         _buttons.ForEach(x => x.transform.parent = null);
     }
 
@@ -66,6 +74,10 @@ public class BattleController : MonoBehaviour
     {
         _buttons.ForEach(x => x.transform.parent = null);
         _activeButtons = new List<Image> { buttonAttack, buttonDefend };
+        if (GameState.Instance.HasApple)
+        {
+            _activeButtons.Add(buttonApple);
+        }
         _activeButtons.ForEach(x => x.transform.parent = battleMenu.transform);
         SelectButton(0);
     }
@@ -111,6 +123,10 @@ public class BattleController : MonoBehaviour
         else if (_activeButtons[_selectedButtonIndex] == buttonHeal)
         {
             StartCoroutine(Heal());
+        }
+        else if (_activeButtons[_selectedButtonIndex] == buttonApple)
+        {
+            StartCoroutine(EatApple());
         }
     }
 
@@ -158,6 +174,15 @@ public class BattleController : MonoBehaviour
         }
         
         _isPlayerTurnFinished = true;
+    }
+
+    private IEnumerator EatApple()
+    {
+        GameState.Instance.FullHealArthur();
+        
+        _isPlayerTurnFinished = true;
+
+        yield return null;
     }
 
     private IEnumerator SelectPlayerForHeal()
@@ -227,13 +252,21 @@ public class BattleController : MonoBehaviour
         _activeButtons[_selectedButtonIndex].color = Color.red;
     }
     
-    public void StartBattle(List<Enemy> enemies)
+    public void StartBattle(List<Enemy> enemies, bool isStartedByMonster)
     {
-        StartCoroutine(StartBattleCoroutine(enemies));
+        StartCoroutine(StartBattleCoroutine(null, enemies, isStartedByMonster));
+    }
+
+    public void StartBattle(GameObject gameObjectLancelot, List<Enemy> enemies, bool isStartedByMonster)
+    {
+        StartCoroutine(StartBattleCoroutine(gameObjectLancelot, enemies, isStartedByMonster));
     }
     
-    private IEnumerator StartBattleCoroutine(List<Enemy> enemies)
+    private IEnumerator StartBattleCoroutine(GameObject gameObjectLancelot, List<Enemy> enemies, bool isStartedByMonster)
     {
+        _isBattleStartedWithLancelot = GameState.Instance.LancelotHealth > 0;
+        _isBattleStartedWithApple = GameState.Instance.HasApple;
+            
         Reset();
         
         _isBattleInProgress = true;
@@ -242,7 +275,7 @@ public class BattleController : MonoBehaviour
         
         cinematicManager.StartCinematic();
         
-        yield return SpawnAllies();
+        yield return SpawnAllies(gameObjectLancelot);
         
         cinematicManager.StopCinematic();
 
@@ -287,7 +320,24 @@ public class BattleController : MonoBehaviour
 
                 if (GameState.Instance.ArthurHealth == 0)
                 {
-                    // TODO: GAME OVER.
+                    if (isStartedByMonster)
+                    {
+                        GameState.Instance.ending = Ending.A;
+                    }
+                    else if (_isBattleStartedWithApple && _isBattleStartedWithLancelot)
+                    {
+                        GameState.Instance.ending = Ending.B;
+                    }
+                    else if (!_isBattleStartedWithApple)
+                    {
+                        GameState.Instance.ending = Ending.F;
+                    }
+                    else if (!_isBattleStartedWithLancelot)
+                    {
+                        GameState.Instance.ending = Ending.D;
+                    }
+
+                    SceneManager.LoadScene("End");
                 }
             }
             else
@@ -307,10 +357,20 @@ public class BattleController : MonoBehaviour
                     var lancelotEnemy = Instantiate(lancelotEnemyPrefab);
                     lancelotEnemy.transform.position = lancelotPosition;
                     _enemies.Add(lancelotEnemy.GetComponent<Enemy>());
+
+                    _isLancelotKillingStarted = true;
                 }
                 else
                 {
-                    yield return FinishBattle();
+                    if (_isLancelotKillingStarted)
+                    {
+                        GameState.Instance.ending = Ending.E;
+                        SceneManager.LoadScene("End");
+                    }
+                    else
+                    {
+                        yield return FinishBattle();
+                    }
                 }
             }
         }
@@ -406,28 +466,8 @@ public class BattleController : MonoBehaviour
         
         yield return _activeEnemy.transform.DOMove(positionPrev, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
     }
-
-    // TODO: Replace _activeEnemy with _selectedEnemy here.
-    private void SelectEnemyWithIndex(int enemyIndex)
-    {
-        /*
-        if (_activeEnemy != null)
-        {
-            if (_activeEnemyColorTweener != null)
-            {
-                _activeEnemyColorTweener.Kill();
-            }
-
-            _activeEnemy.GetComponent<SpriteRenderer>().material.color = Color.white;
-        }
-        
-        _activeEnemyIndex = enemyIndex;
-        _activeEnemy = _enemies[_activeEnemyIndex];
-*/
-        //_activeEnemyColorTweener = _activeEnemy.GetComponent<SpriteRenderer>().material.DOColor(new Color(0.5f, 0.5f, 0.5f), 1.0f).SetLoops(-1, LoopType.Yoyo);
-    }
-
-    private IEnumerator SpawnAllies()
+    
+    private IEnumerator SpawnAllies(GameObject gameObjectLancelotPredefined)
     {
         var arthurPosition = arthur.transform.position;
 
@@ -436,13 +476,22 @@ public class BattleController : MonoBehaviour
             var battleSpot = FindObjectsOfType<BattleSpot>().Where(x => !x.GetComponent<BattleSpot>().IsTouching)
                 .OrderBy(x => _random.NextInt()).First();
 
-            GameObject gameObjectLancelot = Instantiate(lancelotPrefab);
-            gameObjectLancelot.transform.position = arthurPosition;
-            var tweenerLancelot = gameObjectLancelot.transform.DOMove(battleSpot.transform.position, Constants.SpeedRun)
-                .SetSpeedBased();
+            GameObject gameObjectLancelot;
 
-            yield return tweenerLancelot.WaitForCompletion();
+            if (gameObjectLancelotPredefined != null)
+            {
+                gameObjectLancelot = gameObjectLancelotPredefined;
+            }
+            else
+            {
+                gameObjectLancelot = Instantiate(lancelotPrefab);
+                gameObjectLancelot.transform.position = arthurPosition;
+                var tweenerLancelot = gameObjectLancelot.transform.DOMove(battleSpot.transform.position, Constants.SpeedRun)
+                    .SetSpeedBased();
 
+                yield return tweenerLancelot.WaitForCompletion();                
+            }
+            
             _players.Add(gameObjectLancelot);
         }
         
@@ -457,9 +506,9 @@ public class BattleController : MonoBehaviour
 
     private void Update()
     {
-        battleMenu.SetActive(_isBattleInProgress && _isPlayerTurn && !_isPlayerActing);
+        battleMenu.SetActive(_isBattleInProgress && _isPlayerTurn && !_isPlayerActing && !dialogController.IsDialogInProgress);
 
-        if (_isPlayerTurn && !_isPlayerActing && !_isSelectingPlayerEnabled)
+        if (_isPlayerTurn && !_isPlayerActing && !_isSelectingPlayerEnabled && !dialogController.IsDialogInProgress)
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
