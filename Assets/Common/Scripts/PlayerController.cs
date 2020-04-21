@@ -25,17 +25,14 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 movementDirection;
 
-    private int aidVelocityX;
-    private int aidVelocityY;
+    private int _aidIsMoving = Animator.StringToHash("IsMoving");
+    private int _aidIsAttacking = Animator.StringToHash("IsAttacking");
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
 
         animator = GetComponent<Animator>();
-
-        aidVelocityX = Animator.StringToHash("VelocityX");
-        aidVelocityY = Animator.StringToHash("VelocityY");
     }
 
     void Update()
@@ -46,35 +43,28 @@ public class PlayerController : MonoBehaviour
         // TODO: Refactor. Last second edits.
         if (cinematicManager.IsCinematicInProgress) {
             movementDirection = new Vector2(0.0f, 0.0f);
-            animator.SetFloat(aidVelocityX, movementDirection.x);
-            animator.SetFloat(aidVelocityY, movementDirection.y);  
+            /*
             if (movementDirection.x == 0 && movementDirection.y == 0)
             {
-                animator.SetLayerWeight(0, 1.0f);
-                animator.SetLayerWeight(1, 0.0f);
+                animator.SetBool(_aidIsMoving, false);
             }
             else
             {
-                animator.SetLayerWeight(0, 0.0f);
-                animator.SetLayerWeight(1, 1.0f);
-            }                       
+                animator.SetBool(_aidIsMoving, true);
+            } 
+            */
             return;
         }
 
         movementDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        animator.SetFloat(aidVelocityX, movementDirection.x);
-        animator.SetFloat(aidVelocityY, movementDirection.y);
-
+        
         if (movementDirection.x == 0 && movementDirection.y == 0)
         {
-            animator.SetLayerWeight(0, 1.0f);
-            animator.SetLayerWeight(1, 0.0f);
+            animator.SetBool(_aidIsMoving, false);
         }
         else
         {
-            animator.SetLayerWeight(0, 0.0f);
-            animator.SetLayerWeight(1, 1.0f);
+            animator.SetBool(_aidIsMoving, true);
         }     
 
         if (movementDirection.x > 0) 

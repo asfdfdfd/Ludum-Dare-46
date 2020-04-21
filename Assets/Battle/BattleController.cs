@@ -11,6 +11,19 @@ using Random = Unity.Mathematics.Random;
 
 public class BattleController : MonoBehaviour
 {
+    public AudioSource audioSourceMusic;
+    public AudioSource audioSourceSound;
+    
+    public AudioClip audioClipFanfare;
+    public AudioClip audioClipBattle;
+    public AudioClip audioClipBossBattle;
+    public AudioClip audioClipRegular;
+
+    public AudioClip audioClipHeal;
+    public AudioClip audioClipHitPlayer;
+    public AudioClip audioClipHitMonster;
+    public AudioClip audioClipHitBoss;
+
     public DialogController dialogController;
     
     public CinematicManager cinematicManager;
@@ -64,10 +77,8 @@ public class BattleController : MonoBehaviour
     private bool _isBattleStartedWithApple = false;
     private bool _isLancelotKillingStarted = false;
     
-    private int _aidAttack = Animator.StringToHash("Attack");
-    
-    private int _aidVelocityX = Animator.StringToHash("VelocityX");
-    private int _aidVelocityY = Animator.StringToHash("VelocityY");
+    private int _aidIsMoving = Animator.StringToHash("IsMoving");
+    private int _aidIsAttacking = Animator.StringToHash("IsAttacking");
     
     private void Awake()
     {
@@ -145,16 +156,13 @@ public class BattleController : MonoBehaviour
         
         var animator = _activePlayer.GetComponent<Animator>();
         
-        animator.SetLayerWeight(0, 0.0f);
-        animator.SetLayerWeight(1, 0.0f);
-        animator.SetLayerWeight(2, 1.0f);
-        animator.SetFloat(_aidVelocityX, 0.0f);
-        animator.SetFloat(_aidVelocityY, -1.0f);        
-        animator.SetTrigger(_aidAttack);
+        animator.SetBool(_aidIsMoving, false);
+        animator.SetBool(_aidIsAttacking, true);
         
         yield return _activePlayer.transform.DOMove(selectedEnemy.transform.position, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
         
-        animator.SetTrigger(_aidAttack);
+        audioSourceSound.clip = audioClipHitPlayer;
+        audioSourceSound.Play();
         
         selectedEnemy.Damage(GameState.Instance.ArthurDamage);
 
@@ -166,8 +174,9 @@ public class BattleController : MonoBehaviour
         
         yield return _activePlayer.transform.DOMove(positionPrev, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
         
-        animator.SetLayerWeight(0, 1.0f);
-        animator.SetLayerWeight(2, 0.0f);
+        animator.SetBool(_aidIsMoving, false);
+        animator.SetBool(_aidIsAttacking, false);
+
         
         _isPlayerActing = false;
         
@@ -183,6 +192,13 @@ public class BattleController : MonoBehaviour
     {
         yield return SelectPlayerForHeal();
 
+        var animator = _activePlayer.GetComponent<Animator>();
+        
+        animator.SetBool(_aidIsMoving, false);
+        animator.SetBool(_aidIsAttacking, true);
+
+        yield return new WaitForSeconds(0.5f);
+        
         if (_selectedPlayerIndex == 0)
         {
             GameState.Instance.HealArthur(GameState.Instance.LancelotHeal); 
@@ -191,6 +207,11 @@ public class BattleController : MonoBehaviour
         {
             GameState.Instance.HealLancelot(GameState.Instance.LancelotHeal);
         }
+
+        audioSourceSound.clip = audioClipHeal;
+        audioSourceSound.Play();
+        
+        animator.SetBool(_aidIsAttacking, false);        
         
         _isPlayerTurnFinished = true;
     }
@@ -283,6 +304,19 @@ public class BattleController : MonoBehaviour
     
     private IEnumerator StartBattleCoroutine(GameObject gameObjectLancelot, List<Enemy> enemies, bool isStartedByMonster)
     {
+        audioSourceMusic.Stop();
+        
+        if (isStartedByMonster)
+        {
+            audioSourceMusic.clip = audioClipBattle;
+        }
+        else
+        {
+            audioSourceMusic.clip = audioClipBossBattle;
+        }
+
+        audioSourceMusic.Play();
+            
         _isBattleStartedWithLancelot = GameState.Instance.LancelotHealth > 0;
         _isBattleStartedWithApple = GameState.Instance.HasApple;
             
@@ -335,7 +369,7 @@ public class BattleController : MonoBehaviour
 
                 _activeEnemy = _enemies[_activeEnemyIndex];
 
-                yield return EnemyTurn();
+                yield return EnemyTurn(isStartedByMonster);
 
                 if (GameState.Instance.ArthurHealth == 0)
                 {
@@ -400,6 +434,12 @@ public class BattleController : MonoBehaviour
 
     private IEnumerator FinishBattle()
     {
+        audioSourceMusic.Stop();
+        audioSourceMusic.clip = audioClipFanfare;
+        audioSourceMusic.Play();
+        
+        yield return new WaitForSeconds(3.0f);
+        
         cinematicManager.StartCinematic();
 
         if (_players.Count > 1)
@@ -417,6 +457,10 @@ public class BattleController : MonoBehaviour
 
         arthur.SetActive(true);
         arthur.transform.position = arthurPosition;
+        
+        audioSourceMusic.Stop();
+        audioSourceMusic.clip = audioClipRegular;
+        audioSourceMusic.Play();        
     }
 
     private void Reset()
@@ -454,7 +498,7 @@ public class BattleController : MonoBehaviour
         }
     }
 
-    private IEnumerator EnemyTurn()
+    private IEnumerator EnemyTurn(bool isMonster)
     {
         // Special case for the Lancelot battle.
         if (_activeEnemy.damage == 0)
@@ -475,7 +519,22 @@ public class BattleController : MonoBehaviour
             targetPlayer = _players[_random.NextInt(0, _players.Count)];   
         }
 
+        var animator = _activeEnemy.GetComponent<Animator>();
+        animator.SetBool(_aidIsMoving, false);
+        animator.SetBool(_aidIsAttacking, true);
+        
         yield return _activeEnemy.transform.DOMove(targetPlayer.transform.position, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
+
+        if (isMonster)
+        {
+            audioSourceSound.clip = audioClipHitMonster;
+        }
+        else
+        {
+            audioSourceSound.clip = audioClipHitBoss;
+        }
+
+        audioSourceSound.Play();
         
         if (targetPlayer == _players[0])
         {
@@ -487,6 +546,8 @@ public class BattleController : MonoBehaviour
         }
         
         yield return _activeEnemy.transform.DOMove(positionPrev, Constants.SpeedAttack).SetSpeedBased().WaitForCompletion();
+        
+        animator.SetBool(_aidIsAttacking, false);
     }
     
     private IEnumerator SpawnAllies(GameObject gameObjectLancelotPredefined)

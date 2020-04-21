@@ -19,6 +19,9 @@ public class CinematicIntro : MonoBehaviour
 
     public bool finalizeWithoutCinematic;
     
+    private int _aidIsMoving = Animator.StringToHash("IsMoving");
+    private int _aidIsAttacking = Animator.StringToHash("IsAttacking");
+    
     void Start()
     {
         if (finalizeWithoutCinematic)
@@ -34,6 +37,12 @@ public class CinematicIntro : MonoBehaviour
     private IEnumerator StartCinematic()
     {
         cinematicManager.StartCinematic();
+
+        var arthurAnimator = arthur.GetComponent<Animator>();
+        var lancelotAnimator = lancelot.GetComponent<Animator>();
+        
+        arthurAnimator.SetBool(_aidIsMoving, true);
+        lancelotAnimator.SetBool(_aidIsMoving, true);
         
         arthur.transform.position = arthurStart.transform.position;
         var tweenerArthur = arthur.transform.DOMove(arthurStop.transform.position, Constants.SpeedWalk).SetSpeedBased();
@@ -44,12 +53,17 @@ public class CinematicIntro : MonoBehaviour
         yield return tweenerArthur.WaitForCompletion();
         yield return tweenerLancelot.WaitForCompletion();
 
+        arthurAnimator.SetBool(_aidIsMoving, false);
+        lancelotAnimator.SetBool(_aidIsMoving, false);
+        
         yield return dialogController.Show(DialogLineAvatar.Lancelot, "Lancelot", "Arthur?");
         yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "Do you feel it?");
         yield return dialogController.Show(DialogLineAvatar.Lancelot, "Lancelot", "What?");
         yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "Power of the sword. It's getting stronger.");
         yield return dialogController.Show(DialogLineAvatar.Arthur, "Arthur", "Let's go.");
-
+        
+        lancelotAnimator.SetBool(_aidIsMoving, true);
+        
         yield return lancelot.transform.DOMove(arthur.transform.position, Constants.SpeedWalk).SetSpeedBased()
             .WaitForCompletion();
         

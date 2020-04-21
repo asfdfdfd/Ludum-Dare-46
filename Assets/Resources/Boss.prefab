@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 862881707787799578}
   - component: {fileID: 862881707787799572}
   - component: {fileID: 862881707787799575}
+  - component: {fileID: 3288425217206462834}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -113,3 +114,22 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 2.305}
   serializedVersion: 2
   m_Radius: 2.7
+--- !u!95 &3288425217206462834
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862881707787799574}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a6e3da03d07724eb38d171e70aa8e955, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
