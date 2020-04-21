@@ -444,7 +444,15 @@ public class BattleController : MonoBehaviour
 
         if (_players.Count > 1)
         {
+            var animator = _players[1].GetComponent<Animator>();
+            
+            animator.SetBool(_aidIsMoving, true);
+            animator.SetBool(_aidIsAttacking, false);
+            
             yield return _players[1].transform.DOMove(_players[0].transform.position, Constants.SpeedWalk).SetSpeedBased().WaitForCompletion();
+            
+            animator.SetBool(_aidIsMoving, false);
+            animator.SetBool(_aidIsAttacking, false);            
         }
                 
         var arthurPosition = _players[0].transform.position;
@@ -572,7 +580,14 @@ public class BattleController : MonoBehaviour
                 var tweenerLancelot = gameObjectLancelot.transform.DOMove(battleSpot.transform.position, Constants.SpeedRun)
                     .SetSpeedBased();
 
-                yield return tweenerLancelot.WaitForCompletion();                
+                var animator = gameObjectLancelot.GetComponent<Animator>();
+                animator.SetBool(_aidIsMoving, true);
+                animator.SetBool(_aidIsAttacking, false);
+                
+                yield return tweenerLancelot.WaitForCompletion();
+                
+                animator.SetBool(_aidIsMoving, false);
+                animator.SetBool(_aidIsAttacking, false);                
             }
             
             _players.Add(gameObjectLancelot);
