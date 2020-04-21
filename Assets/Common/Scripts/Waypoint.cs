@@ -11,8 +11,8 @@ public class Waypoint : MonoBehaviour
     {
         if (Application.isEditor)
         {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawCube(transform.position, _gizmoSize);
+            //Gizmos.color = Color.cyan;
+            //Gizmos.DrawCube(transform.position, _gizmoSize);
         }
     }
 }
